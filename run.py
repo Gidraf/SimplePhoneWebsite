@@ -1,8 +1,11 @@
 from flask import Flask, render_template,request,jsonify
 from models import db
+import os
 from flask_migrate import Migrate
 
 app = Flask(__name__)
+
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
 db.init_app(app)
 
