@@ -21,7 +21,7 @@ manager.add_command('db', MigrateCommand)
 from models import user
 
 @app.route('/',methods=["GET","POST"])
-def home():
+def signup():
     if request.method == "GET":
         return render_template("index.html")
     password =  request.values.get("password")
@@ -35,6 +35,12 @@ def home():
     db.session.commit()
     results = User.query.filter_by(email=email).first()
     return jsonify({"username":results.username})
+
+
+@app.route('/login', methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        return render_template("login.html")
 
 
 if __name__ == "__main__":
