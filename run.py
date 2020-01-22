@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request,jsonify
+from flask import Flask, render_template,request,jsonify,redirect,flash
 from models.user import User
 from models import db
 import os
@@ -34,14 +34,21 @@ def signup():
     db.session.add(user)
     db.session.commit()
     results = User.query.filter_by(email=email).first()
-    return jsonify({"username":results.username})
+    return redirect("/login")
 
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html")
+    password =  request.values.get("password")
+    email = request.values.get("email")
+    user = User.query.filter_by(email=email).first()
 
+    if not user:
+       flash("No user found with this email address")
+    elif user and user.password == password:
+        flash (f"You have been successfully logged in { user.username}")
 
 if __name__ == "__main__":
     app.run(debug=True)
